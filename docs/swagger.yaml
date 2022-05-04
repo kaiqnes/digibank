@@ -1,0 +1,70 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: kaiqnes@gmail.com
+    name: Caique Nunes
+    url: https://www.linkedin.com/in/caique-nunes/
+  description: This is a code challenge that manages some bank routines.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Digibank API
+  version: "1.0"
+paths:
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint creates a new account and returns the "document_number"
+        (string) representing the accountID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: This endpoint creates a new account
+      tags:
+      - Account
+  /accounts/:accountID:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint receives an accountID and returns the respective
+        account details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: This endpoint retrieves a specific account
+      tags:
+      - Account
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: This description endpoint is a health check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: This summary endpoint is a health check
+      tags:
+      - _HealthCheck
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint receives a transaction
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: This endpoint receives a transaction
+      tags:
+      - Transaction
+swagger: "2.0"

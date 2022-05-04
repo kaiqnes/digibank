@@ -35,7 +35,7 @@ func (a *accountsController) SetupEndpoints() {
 // createAccount 	 godoc
 // @Summary      This endpoint creates a new account
 // @Description  This endpoint creates a new account and returns the "document_number" (string) representing the accountID
-// @Tags         CreateAccount
+// @Tags         Account
 // @Accept       json
 // @Produce      json
 // @Success      200
@@ -59,7 +59,7 @@ func (a *accountsController) createAccount(ctx *gin.Context) {
 // createAccount 	 godoc
 // @Summary      This endpoint retrieves a specific account
 // @Description  This endpoint receives an accountID and returns the respective account details
-// @Tags         GetAccount
+// @Tags         Account
 // @Accept       json
 // @Produce      json
 // @Success      200

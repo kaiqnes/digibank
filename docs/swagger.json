@@ -1,0 +1,102 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a code challenge that manages some bank routines.",
+        "title": "Digibank API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Caique Nunes",
+            "url": "https://www.linkedin.com/in/caique-nunes/",
+            "email": "kaiqnes@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/accounts": {
+            "post": {
+                "description": "This endpoint creates a new account and returns the \"document_number\" (string) representing the accountID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "This endpoint creates a new account",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/accounts/:accountID": {
+            "get": {
+                "description": "This endpoint receives an accountID and returns the respective account details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "This endpoint retrieves a specific account",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "This description endpoint is a health check",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "_HealthCheck"
+                ],
+                "summary": "This summary endpoint is a health check",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "post": {
+                "description": "This endpoint receives a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "This endpoint receives a transaction",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    }
+}
