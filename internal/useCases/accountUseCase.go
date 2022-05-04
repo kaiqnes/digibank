@@ -9,11 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type accountsUseCase struct {
-	repository repository.AccountsRepository
-}
-
-type AccountsUseCase interface {
+//go:generate mockgen -source=./accountUseCase.go -destination=./mocks/accountUseCase_mock.go
+type AccountUseCase interface {
 	CreateAccount(ctx *gin.Context, accountContent dto.CreateAccountInput) (entities.Account, error)
 	GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error)
 }

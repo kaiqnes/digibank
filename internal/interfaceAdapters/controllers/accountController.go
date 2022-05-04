@@ -11,23 +11,23 @@ import (
 	"strconv"
 )
 
-type accountsController struct {
+type accountController struct {
 	routes    *gin.RouterGroup
 	presenter presenters.AccountPresenter
-	useCase   useCases.AccountsUseCase
+	useCase   useCases.AccountUseCase
 }
 
-type AccountsController interface {
+type AccountController interface {
 	SetupEndpoints()
 	createAccount(ctx *gin.Context)
 	getAccount(ctx *gin.Context)
 }
 
-func NewAccountsController(routes *gin.RouterGroup, presenter presenters.AccountPresenter, useCase useCases.AccountsUseCase) AccountsController {
-	return &accountsController{routes: routes, presenter: presenter, useCase: useCase}
+func NewAccountController(routes *gin.RouterGroup, presenter presenters.AccountPresenter, useCase useCases.AccountUseCase) AccountController {
+	return &accountController{routes: routes, presenter: presenter, useCase: useCase}
 }
 
-func (a *accountsController) SetupEndpoints() {
+func (a *accountController) SetupEndpoints() {
 	a.routes.POST("/accounts", a.createAccount)
 	a.routes.GET("/accounts/:accountID", a.getAccount)
 }
@@ -42,7 +42,7 @@ func (a *accountsController) SetupEndpoints() {
 // @Failure      400 {object} dto.ErrorOutputDto
 // @Failure      500 {object} dto.ErrorOutputDto
 // @Router       /api/v1/accounts [post]
-func (a *accountsController) createAccount(ctx *gin.Context) {
+func (a *accountController) createAccount(ctx *gin.Context) {
 	var accountContent dto.CreateAccountInput
 
 	if err := ctx.BindJSON(&accountContent); err != nil {
@@ -69,7 +69,7 @@ func (a *accountsController) createAccount(ctx *gin.Context) {
 // @Failure      400 {object} dto.ErrorOutputDto
 // @Failure      500 {object} dto.ErrorOutputDto
 // @Router       /api/v1/accounts/{accountID} [get]
-func (a *accountsController) getAccount(ctx *gin.Context) {
+func (a *accountController) getAccount(ctx *gin.Context) {
 	accountID := ctx.Param("accountID")
 	uAccountID, err := validateAccountID(accountID)
 	if err != nil {

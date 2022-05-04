@@ -6,11 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type accountsRepository struct {
-	session *gorm.DB
-}
-
-type AccountsRepository interface {
+//go:generate mockgen -source=./accountRepository.go -destination=./mocks/accountRepository_mock.go
+type AccountRepository interface {
 	CreateAccount(ctx *gin.Context, account *entities.Account) error
 	GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error)
 }

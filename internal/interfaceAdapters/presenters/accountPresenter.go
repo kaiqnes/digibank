@@ -6,10 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type accountPresenter struct {
-	errPresenter ErrorPresenter
-}
-
+//go:generate mockgen -source=./accountPresenter.go -destination=./mocks/accountPresenter_mock.go
 type AccountPresenter interface {
 	PresentAccount(ctx *gin.Context, account entities.Account, statusCode int)
 	PresentAccountError(ctx *gin.Context, err error, statusCode int)

@@ -5,8 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type errorPresenter struct{}
-
+//go:generate mockgen -source=./errorPresenter.go -destination=./mocks/errorPresenter_mock.go
 type ErrorPresenter interface {
 	PresentError(ctx *gin.Context, err error, statusCode int)
 }

@@ -6,7 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type transactionsRepository struct {
+//go:generate mockgen -source=./transactionRepository.go -destination=./mocks/transactionRepository_mock.go
+type TransactionRepository interface {
+	CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error
+}
+
+type transactionRepository struct {
 	session *gorm.DB
 }
 

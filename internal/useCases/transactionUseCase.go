@@ -10,10 +10,7 @@ import (
 	"time"
 )
 
-type transactionUseCase struct {
-	repository repository.TransactionsRepository
-}
-
+//go:generate mockgen -source=./transactionUseCase.go -destination=./mocks/transactionUseCase_mock.go
 type TransactionUseCase interface {
 	CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, error)
 }

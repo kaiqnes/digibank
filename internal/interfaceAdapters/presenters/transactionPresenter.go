@@ -4,10 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type transactionPresenter struct {
-	errPresenter ErrorPresenter
-}
-
+//go:generate mockgen -source=./transactionPresenter.go -destination=./mocks/transactionPresenter_mock.go
 type TransactionPresenter interface {
 	PresentTransaction(ctx *gin.Context, statusCode int)
 	PresentTransactionError(ctx *gin.Context, err error, statusCode int)
