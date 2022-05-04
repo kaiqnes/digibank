@@ -29,8 +29,10 @@ func (di *dependencyInjection) SetupDependencies() {
 func (di *dependencyInjection) injectPublicResources() {
 	publicGroup := di.routes.Group("/api/v1")
 
+	errPresenter := presenters.NewErrorPresenter()
+
 	/* Accounts */
-	accountsPresenter := presenters.NewAccountPresenter()
+	accountsPresenter := presenters.NewAccountPresenter(errPresenter)
 	accountsRepository := repository.NewAccountsRepository(di.db)
 	accountsUseCase := useCases.NewAccountsUseCase(accountsRepository)
 	accounts := controllers.NewAccountsController(publicGroup, accountsPresenter, accountsUseCase)

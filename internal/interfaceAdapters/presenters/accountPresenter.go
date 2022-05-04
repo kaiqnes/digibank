@@ -6,27 +6,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type accountPresenter struct{}
+type accountPresenter struct {
+	errPresenter ErrorPresenter
+}
 
 type AccountPresenter interface {
 	PresentAccount(ctx *gin.Context, account entities.Account, statusCode int)
 	PresentAccountError(ctx *gin.Context, err error, statusCode int)
 }
 
-func NewAccountPresenter() AccountPresenter {
-	return &accountPresenter{}
+func NewAccountPresenter(errPresenter ErrorPresenter) AccountPresenter {
+	return &accountPresenter{
+		errPresenter: errPresenter,
+	}
 }
 
-func (pbl *accountPresenter) PresentAccount(ctx *gin.Context, account entities.Account, statusCode int) {
-	ctx.JSON(statusCode, pbl.generateAccountResponse(account))
+func (ap *accountPresenter) PresentAccount(ctx *gin.Context, account entities.Account, statusCode int) {
+	ctx.JSON(statusCode, ap.generateAccountResponse(account))
 }
 
-func (pbl *accountPresenter) PresentAccountError(ctx *gin.Context, err error, statusCode int) {
-	errResponse := dto.ErrorOutputDto{Message: err.Error()}
-	ctx.JSON(statusCode, errResponse)
+func (ap *accountPresenter) PresentAccountError(ctx *gin.Context, err error, statusCode int) {
+	ap.errPresenter.PresentError(ctx, err, statusCode)
 }
 
-func (pbl *accountPresenter) generateAccountResponse(account entities.Account) dto.AccountPresenterResponse {
+func (ap *accountPresenter) generateAccountResponse(account entities.Account) dto.AccountPresenterResponse {
 	var response dto.AccountPresenterResponse
 
 	response.AccountID = account.ID
