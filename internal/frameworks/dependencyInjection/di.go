@@ -24,10 +24,21 @@ func (di *dependencyInjection) SetupDependencies() {
 }
 
 func (di *dependencyInjection) injectPublicResources() {
-	//publicGroup := di.routes.Group("/api/v1")
-	_ = di.routes.Group("/api/v1")
+	publicGroup := di.routes.Group("/api/v1")
 
-	// ...
+	/* Accounts */
+	//accountsPresenter := presenters.NewAccountsPresenter()
+	//accountsRepository := repository.NewAccountsRepository()
+	//accountsUseCase := useCases.NewAccountsUseCase()
+	accounts := controllers.NewAccountsController(publicGroup, di.db)
+	accounts.SetupEndpoints()
+
+	/* Transactions */
+	//transactionsPresenter := presenters.NewTransactionsPresenter()
+	//transactionsRepository := repository.NewTransactionsRepository()
+	//transactionsUseCase := useCases.NewTransactionsUseCase()
+	transactions := controllers.NewTransactionsController(publicGroup, di.db)
+	transactions.SetupEndpoints()
 }
 
 func (di *dependencyInjection) injectStructuralResources() {
