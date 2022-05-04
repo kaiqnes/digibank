@@ -39,10 +39,10 @@ func (di *dependencyInjection) injectPublicResources() {
 	accounts.SetupEndpoints()
 
 	/* Transactions */
-	//transactionsPresenter := presenters.NewTransactionsPresenter()
-	//transactionsRepository := repository.NewTransactionsRepository()
-	//transactionsUseCase := useCases.NewTransactionsUseCase()
-	transactions := controllers.NewTransactionsController(publicGroup, di.db)
+	transactionsPresenter := presenters.NewTransactionPresenter(errPresenter)
+	transactionsRepository := repository.NewTransactionsRepository(di.db)
+	transactionsUseCase := useCases.NewTransactionUseCase(transactionsRepository)
+	transactions := controllers.NewTransactionsController(publicGroup, transactionsPresenter, transactionsUseCase)
 	transactions.SetupEndpoints()
 }
 

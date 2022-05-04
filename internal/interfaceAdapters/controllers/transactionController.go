@@ -1,13 +1,17 @@
 package controllers
 
 import (
+	"digibank/internal/interfaceAdapters/dto"
+	"digibank/internal/interfaceAdapters/presenters"
+	"digibank/internal/useCases"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 )
 
 type transactionsController struct {
-	routes *gin.RouterGroup
+	routes    *gin.RouterGroup
+	presenter presenters.TransactionPresenter
+	useCase   useCases.TransactionUseCase
 }
 
 type TransactionsController interface {
@@ -15,12 +19,12 @@ type TransactionsController interface {
 	transaction(ctx *gin.Context)
 }
 
-func NewTransactionsController(routes *gin.RouterGroup, db *gorm.DB) TransactionsController {
-	return &transactionsController{routes: routes}
+func NewTransactionsController(routes *gin.RouterGroup, presenter presenters.TransactionPresenter, useCase useCases.TransactionUseCase) TransactionsController {
+	return &transactionsController{routes: routes, presenter: presenter, useCase: useCase}
 }
 
-func (h *transactionsController) SetupEndpoints() {
-	h.routes.POST("/transactions", h.transaction)
+func (tc *transactionsController) SetupEndpoints() {
+	tc.routes.POST("/transactions", tc.transaction)
 }
 
 // transaction 	 godoc
@@ -31,6 +35,18 @@ func (h *transactionsController) SetupEndpoints() {
 // @Produce      json
 // @Success      200
 // @Router       /transactions [post]
-func (h *transactionsController) transaction(ctx *gin.Context) {
-	ctx.JSON(http.StatusNoContent, gin.H{})
+func (tc *transactionsController) transaction(ctx *gin.Context) {
+	var transactionContent dto.CreateTransactionInput
+
+	if err := ctx.BindJSON(&transactionContent); err != nil {
+		tc.presenter.PresentTransactionError(ctx, err, http.StatusBadRequest)
+		return
+	}
+
+	if _, err := tc.useCase.CreateTransaction(ctx, transactionContent); err != nil {
+		// TODO: Create a personal error obj to encapsulate error and a specific error code instead use just error
+		tc.presenter.PresentTransactionError(ctx, err, http.StatusInternalServerError)
+	} else {
+		tc.presenter.PresentTransaction(ctx, http.StatusCreated)
+	}
 }
