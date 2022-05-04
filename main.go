@@ -14,7 +14,6 @@ import (
 
 // @contact.name   Caique Nunes
 // @contact.url    https://www.linkedin.com/in/caique-nunes/
-// @contact.email  kaiqnes@gmail.com
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
