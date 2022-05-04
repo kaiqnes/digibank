@@ -1,6 +1,7 @@
 package database
 
 import (
+	"digibank/internal/domain/entities"
 	"digibank/internal/frameworks/utils"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -14,7 +15,14 @@ func NewSession() *gorm.DB {
 	if err != nil {
 		log.Fatalf("failed to connect database - err %v", err)
 	}
+	migrateModels(db)
 	return db
+}
+
+func migrateModels(db *gorm.DB) {
+	db.AutoMigrate(&entities.Account{})
+	db.AutoMigrate(&entities.OperationType{})
+	db.AutoMigrate(&entities.Transaction{})
 }
 
 func getDNS() string {
