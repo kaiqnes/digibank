@@ -2,6 +2,9 @@ package dependencyInjection
 
 import (
 	"digibank/internal/interfaceAdapters/controllers"
+	"digibank/internal/interfaceAdapters/presenters"
+	"digibank/internal/interfaceAdapters/repository"
+	"digibank/internal/useCases"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -27,10 +30,10 @@ func (di *dependencyInjection) injectPublicResources() {
 	publicGroup := di.routes.Group("/api/v1")
 
 	/* Accounts */
-	//accountsPresenter := presenters.NewAccountsPresenter()
-	//accountsRepository := repository.NewAccountsRepository()
-	//accountsUseCase := useCases.NewAccountsUseCase()
-	accounts := controllers.NewAccountsController(publicGroup, di.db)
+	accountsPresenter := presenters.NewAccountPresenter()
+	accountsRepository := repository.NewAccountsRepository(di.db)
+	accountsUseCase := useCases.NewAccountsUseCase(accountsRepository)
+	accounts := controllers.NewAccountsController(publicGroup, accountsPresenter, accountsUseCase)
 	accounts.SetupEndpoints()
 
 	/* Transactions */
