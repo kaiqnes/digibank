@@ -13,8 +13,7 @@ const docTemplate = `{
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Caique Nunes",
-            "url": "https://www.linkedin.com/in/caique-nunes/",
-            "email": "kaiqnes@gmail.com"
+            "url": "https://www.linkedin.com/in/caique-nunes/"
         },
         "license": {
             "name": "Apache 2.0",
@@ -25,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/accounts": {
+        "/api/v1/accounts": {
             "post": {
                 "description": "This endpoint creates a new account and returns the \"document_number\" (string) representing the accountID",
                 "consumes": [
@@ -34,18 +33,42 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Account"
-                ],
                 "summary": "This endpoint creates a new account",
+                "parameters": [
+                    {
+                        "description": "Document number to be inserted into account to be created",
+                        "name": "request_body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "{\r\n  \"document_number\": \"12345678900\"\r\n}"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AccountPresenterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
                     }
                 }
             }
         },
-        "/accounts/:accountID": {
+        "/api/v1/accounts/{accountID}": {
             "get": {
                 "description": "This endpoint receives an accountID and returns the respective account details",
                 "consumes": [
@@ -58,9 +81,80 @@ const docTemplate = `{
                     "Account"
                 ],
                 "summary": "This endpoint retrieves a specific account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "accountID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AccountPresenterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transactions": {
+            "post": {
+                "description": "This endpoint receives a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "This endpoint receives a transaction",
+                "parameters": [
+                    {
+                        "description": "Body of a transaction",
+                        "name": "request_body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "{\r\n\"account_id\": 1,\r\n\"operation_type_id\": 4,\r\n\"amount\": 123.45\r\n}"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorOutputDto"
+                        }
                     }
                 }
             }
@@ -75,33 +169,37 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "_HealthCheck"
+                    "HealthCheck"
                 ],
                 "summary": "This summary endpoint is a health check",
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "dto.AccountPresenterResponse": {
+            "type": "object",
+            "properties": {
+                "accountID": {
+                    "type": "integer"
+                },
+                "document_number": {
+                    "type": "string"
+                }
+            }
         },
-        "/transactions": {
-            "post": {
-                "description": "This endpoint receives a transaction",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Transaction"
-                ],
-                "summary": "This endpoint receives a transaction",
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
+        "dto.ErrorOutputDto": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
                 }
             }
         }

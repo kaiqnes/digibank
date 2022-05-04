@@ -33,8 +33,11 @@ func (tc *transactionsController) SetupEndpoints() {
 // @Tags         Transaction
 // @Accept       json
 // @Produce      json
-// @Success      200
-// @Router       /transactions [post]
+// @Param request_body body string true "Body of a transaction" SchemaExample({\r\n"account_id": 1,\r\n"operation_type_id": 4,\r\n"amount": 123.45\r\n})
+// @Success      200 {object} interface{}
+// @Failure      400 {object} dto.ErrorOutputDto
+// @Failure      500 {object} dto.ErrorOutputDto
+// @Router       /api/v1/transactions [post]
 func (tc *transactionsController) transaction(ctx *gin.Context) {
 	var transactionContent dto.CreateTransactionInput
 

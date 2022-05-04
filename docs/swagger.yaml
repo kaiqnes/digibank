@@ -1,8 +1,20 @@
 basePath: /
+definitions:
+  dto.AccountPresenterResponse:
+    properties:
+      accountID:
+        type: integer
+      document_number:
+        type: string
+    type: object
+  dto.ErrorOutputDto:
+    properties:
+      message:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
-    email: kaiqnes@gmail.com
     name: Caique Nunes
     url: https://www.linkedin.com/in/caique-nunes/
   description: This is a code challenge that manages some bank routines.
@@ -13,34 +25,98 @@ info:
   title: Digibank API
   version: "1.0"
 paths:
-  /accounts:
+  /api/v1/accounts:
     post:
       consumes:
       - application/json
       description: This endpoint creates a new account and returns the "document_number"
         (string) representing the accountID
+      parameters:
+      - description: Document number to be inserted into account to be created
+        in: body
+        name: request_body
+        required: true
+        schema:
+          example: "{\r\n  \"document_number\": \"12345678900\"\r\n}"
+          type: string
       produces:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AccountPresenterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
       summary: This endpoint creates a new account
-      tags:
-      - Account
-  /accounts/:accountID:
+  /api/v1/accounts/{accountID}:
     get:
       consumes:
       - application/json
       description: This endpoint receives an accountID and returns the respective
         account details
+      parameters:
+      - description: Account ID
+        in: path
+        name: accountID
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AccountPresenterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
       summary: This endpoint retrieves a specific account
       tags:
       - Account
+  /api/v1/transactions:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint receives a transaction
+      parameters:
+      - description: Body of a transaction
+        in: body
+        name: request_body
+        required: true
+        schema:
+          example: "{\r\n\"account_id\": 1,\r\n\"operation_type_id\": 4,\r\n\"amount\":
+            123.45\r\n}"
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorOutputDto'
+      summary: This endpoint receives a transaction
+      tags:
+      - Transaction
   /health:
     get:
       consumes:
@@ -50,21 +126,10 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
+          schema:
+            type: object
       summary: This summary endpoint is a health check
       tags:
-      - _HealthCheck
-  /transactions:
-    post:
-      consumes:
-      - application/json
-      description: This endpoint receives a transaction
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ""
-      summary: This endpoint receives a transaction
-      tags:
-      - Transaction
+      - HealthCheck
 swagger: "2.0"
