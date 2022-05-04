@@ -10,15 +10,11 @@ type transactionsRepository struct {
 	session *gorm.DB
 }
 
-type TransactionsRepository interface {
-	CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error
+func NewTransactionRepository(session *gorm.DB) TransactionRepository {
+	return &transactionRepository{session}
 }
 
-func NewTransactionsRepository(session *gorm.DB) TransactionsRepository {
-	return &transactionsRepository{session}
-}
-
-func (er *transactionsRepository) CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error {
+func (er *transactionRepository) CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error {
 	queryResult := er.session.Create(transaction)
 	return queryResult.Error
 }

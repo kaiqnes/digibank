@@ -18,17 +18,21 @@ type AccountsUseCase interface {
 	GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error)
 }
 
-func NewAccountsUseCase(repository repository.AccountsRepository) AccountsUseCase {
-	return &accountsUseCase{repository}
+type accountUseCase struct {
+	repository repository.AccountRepository
 }
 
-func (a *accountsUseCase) CreateAccount(ctx *gin.Context, accountContent dto.CreateAccountInput) (entities.Account, error) {
+func NewAccountUseCase(repository repository.AccountRepository) AccountUseCase {
+	return &accountUseCase{repository}
+}
+
+func (a *accountUseCase) CreateAccount(ctx *gin.Context, accountContent dto.CreateAccountInput) (entities.Account, error) {
 	account := entities.Account{DocumentNumber: accountContent.DocumentNumber}
 	err := a.repository.CreateAccount(ctx, &account)
 	return account, err
 }
 
-func (a *accountsUseCase) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {
+func (a *accountUseCase) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {
 	account, err := a.repository.GetAccount(ctx, accountID)
 
 	if account.ID == 0 && err == nil {

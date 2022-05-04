@@ -11,6 +11,8 @@ type ErrorPresenter interface {
 	PresentError(ctx *gin.Context, err error, statusCode int)
 }
 
+type errorPresenter struct{}
+
 func NewErrorPresenter() ErrorPresenter {
 	return &errorPresenter{}
 }

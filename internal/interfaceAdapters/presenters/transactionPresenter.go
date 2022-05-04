@@ -13,6 +13,10 @@ type TransactionPresenter interface {
 	PresentTransactionError(ctx *gin.Context, err error, statusCode int)
 }
 
+type transactionPresenter struct {
+	errPresenter ErrorPresenter
+}
+
 func NewTransactionPresenter(errPresenter ErrorPresenter) TransactionPresenter {
 	return &transactionPresenter{
 		errPresenter: errPresenter,

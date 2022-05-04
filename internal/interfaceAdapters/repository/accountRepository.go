@@ -15,16 +15,20 @@ type AccountsRepository interface {
 	GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error)
 }
 
-func NewAccountsRepository(session *gorm.DB) AccountsRepository {
-	return &accountsRepository{session}
+type accountRepository struct {
+	session *gorm.DB
 }
 
-func (er *accountsRepository) CreateAccount(ctx *gin.Context, account *entities.Account) error {
+func NewAccountsRepository(session *gorm.DB) AccountRepository {
+	return &accountRepository{session}
+}
+
+func (er *accountRepository) CreateAccount(ctx *gin.Context, account *entities.Account) error {
 	queryResult := er.session.Create(account)
 	return queryResult.Error
 }
 
-func (er *accountsRepository) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {
+func (er *accountRepository) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {
 	var entityResult entities.Account
 
 	queryResult := er.session.Where("ID", accountID).Find(&entityResult)

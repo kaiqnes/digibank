@@ -18,7 +18,11 @@ type TransactionUseCase interface {
 	CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, error)
 }
 
-func NewTransactionUseCase(repository repository.TransactionsRepository) TransactionUseCase {
+type transactionUseCase struct {
+	repository repository.TransactionRepository
+}
+
+func NewTransactionUseCase(repository repository.TransactionRepository) TransactionUseCase {
 	return &transactionUseCase{repository}
 }
 

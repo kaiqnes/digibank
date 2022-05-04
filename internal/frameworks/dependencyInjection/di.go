@@ -34,15 +34,15 @@ func (di *dependencyInjection) injectPublicResources() {
 	/* Accounts */
 	accountsPresenter := presenters.NewAccountPresenter(errPresenter)
 	accountsRepository := repository.NewAccountsRepository(di.db)
-	accountsUseCase := useCases.NewAccountsUseCase(accountsRepository)
-	accounts := controllers.NewAccountsController(publicGroup, accountsPresenter, accountsUseCase)
+	accountsUseCase := useCases.NewAccountUseCase(accountsRepository)
+	accounts := controllers.NewAccountController(publicGroup, accountsPresenter, accountsUseCase)
 	accounts.SetupEndpoints()
 
 	/* Transactions */
 	transactionsPresenter := presenters.NewTransactionPresenter(errPresenter)
-	transactionsRepository := repository.NewTransactionsRepository(di.db)
+	transactionsRepository := repository.NewTransactionRepository(di.db)
 	transactionsUseCase := useCases.NewTransactionUseCase(transactionsRepository)
-	transactions := controllers.NewTransactionsController(publicGroup, transactionsPresenter, transactionsUseCase)
+	transactions := controllers.NewTransactionController(publicGroup, transactionsPresenter, transactionsUseCase)
 	transactions.SetupEndpoints()
 }
 

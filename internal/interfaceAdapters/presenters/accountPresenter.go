@@ -15,6 +15,10 @@ type AccountPresenter interface {
 	PresentAccountError(ctx *gin.Context, err error, statusCode int)
 }
 
+type accountPresenter struct {
+	errPresenter ErrorPresenter
+}
+
 func NewAccountPresenter(errPresenter ErrorPresenter) AccountPresenter {
 	return &accountPresenter{
 		errPresenter: errPresenter,

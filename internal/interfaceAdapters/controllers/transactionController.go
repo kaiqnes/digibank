@@ -8,26 +8,26 @@ import (
 	"net/http"
 )
 
-type transactionsController struct {
+type transactionController struct {
 	routes    *gin.RouterGroup
 	presenter presenters.TransactionPresenter
 	useCase   useCases.TransactionUseCase
 }
 
-type TransactionsController interface {
+type TransactionController interface {
 	SetupEndpoints()
-	transaction(ctx *gin.Context)
+	createTransaction(ctx *gin.Context)
 }
 
-func NewTransactionsController(routes *gin.RouterGroup, presenter presenters.TransactionPresenter, useCase useCases.TransactionUseCase) TransactionsController {
-	return &transactionsController{routes: routes, presenter: presenter, useCase: useCase}
+func NewTransactionController(routes *gin.RouterGroup, presenter presenters.TransactionPresenter, useCase useCases.TransactionUseCase) TransactionController {
+	return &transactionController{routes: routes, presenter: presenter, useCase: useCase}
 }
 
-func (tc *transactionsController) SetupEndpoints() {
-	tc.routes.POST("/transactions", tc.transaction)
+func (tc *transactionController) SetupEndpoints() {
+	tc.routes.POST("/transactions", tc.createTransaction)
 }
 
-// transaction 	 godoc
+// createTransaction 	 godoc
 // @Summary      This endpoint receives a transaction
 // @Description  This endpoint receives a transaction
 // @Tags         Transaction
@@ -38,7 +38,7 @@ func (tc *transactionsController) SetupEndpoints() {
 // @Failure      400 {object} dto.ErrorOutputDto
 // @Failure      500 {object} dto.ErrorOutputDto
 // @Router       /api/v1/transactions [post]
-func (tc *transactionsController) transaction(ctx *gin.Context) {
+func (tc *transactionController) createTransaction(ctx *gin.Context) {
 	var transactionContent dto.CreateTransactionInput
 
 	if err := ctx.BindJSON(&transactionContent); err != nil {
