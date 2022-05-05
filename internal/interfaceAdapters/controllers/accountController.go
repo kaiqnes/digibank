@@ -74,6 +74,7 @@ func (a *accountController) getAccount(ctx *gin.Context) {
 	uAccountID, err := validateAccountID(accountID)
 	if err != nil {
 		a.presenter.PresentAccountError(ctx, err, http.StatusBadRequest)
+		return
 	}
 
 	if account, err := a.useCase.GetAccount(ctx, uAccountID); err != nil {
