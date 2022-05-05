@@ -229,7 +229,7 @@ func makeScenarioThatGetHealthCheck() healthCheckControllerScenario {
 	return healthCheckControllerScenario{
 		TestName:       "Get Health Check result",
 		Method:         http.MethodGet,
-		Uri:            "/health",
+		Uri:            healthCheckUri,
 		ExpectStatus:   http.StatusOK,
 		ExpectResponse: `{"response":"https://www.youtube.com/watch?v=xos2MnVxe-c"}`,
 	}
