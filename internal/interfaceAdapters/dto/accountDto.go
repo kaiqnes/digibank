@@ -1,7 +1,7 @@
 package dto
 
 type AccountPresenterResponse struct {
-	AccountID      uint
+	AccountID      uint   `json:"account_id"`
 	DocumentNumber string `json:"document_number"`
 }
 
