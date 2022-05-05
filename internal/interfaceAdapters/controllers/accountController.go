@@ -50,9 +50,8 @@ func (a *accountController) createAccount(ctx *gin.Context) {
 		return
 	}
 
-	if createdAccount, err := a.useCase.CreateAccount(ctx, accountContent); err != nil {
-		// TODO: Create a personal error obj to encapsulate error and a specific error code instead use just error
-		a.presenter.PresentAccountError(ctx, err, http.StatusInternalServerError)
+	if createdAccount, errx := a.useCase.CreateAccount(ctx, accountContent); errx != nil {
+		a.presenter.PresentAccountError(ctx, errx.GetError(), errx.GetStatusCode())
 	} else {
 		a.presenter.PresentAccount(ctx, createdAccount, http.StatusCreated)
 	}
@@ -77,8 +76,8 @@ func (a *accountController) getAccount(ctx *gin.Context) {
 		return
 	}
 
-	if account, err := a.useCase.GetAccount(ctx, uAccountID); err != nil {
-		a.presenter.PresentAccountError(ctx, err, http.StatusInternalServerError)
+	if account, errx := a.useCase.GetAccount(ctx, uAccountID); errx != nil {
+		a.presenter.PresentAccountError(ctx, errx.GetError(), errx.GetStatusCode())
 	} else {
 		a.presenter.PresentAccount(ctx, account, http.StatusOK)
 	}

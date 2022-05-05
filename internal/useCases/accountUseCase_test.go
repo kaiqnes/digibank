@@ -21,7 +21,7 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 			mockRepo := mockRepository.NewMockAccountRepository(ctrl)
 			testContext, _ := gin.CreateTestContext(httptest.NewRecorder())
 
-			mockRepo.EXPECT().CreateAccount(gomock.Any(), gomock.Any()).Return(scenario.MockRepoError)
+			mockRepo.EXPECT().CreateAccount(gomock.Any(), gomock.Any()).Return(scenario.MockRepoResult, scenario.MockRepoError)
 
 			useCase := NewAccountUseCase(mockRepo)
 

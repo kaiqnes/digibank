@@ -24,10 +24,10 @@ func TestCreateTransaction(t *testing.T) {
 			}
 
 			testContext, _ := gin.CreateTestContext(httptest.NewRecorder())
-			err := repository.CreateTransaction(testContext, &scenario.Data)
+			result, err := repository.CreateTransaction(testContext, scenario.Data)
 
 			assert.Equal(t, err, scenario.ExpectError)
-			assert.Equal(t, scenario.Data.ID, scenario.ExpectID)
+			assert.Equal(t, result.ID, scenario.ExpectID)
 		})
 	}
 

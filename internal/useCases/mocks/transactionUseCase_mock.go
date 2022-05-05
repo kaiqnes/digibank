@@ -6,6 +6,7 @@ package mock_useCases
 
 import (
 	entities "digibank/internal/domain/entities"
+	errorx "digibank/internal/frameworks/errorx"
 	dto "digibank/internal/interfaceAdapters/dto"
 	reflect "reflect"
 
@@ -37,11 +38,11 @@ func (m *MockTransactionUseCase) EXPECT() *MockTransactionUseCaseMockRecorder {
 }
 
 // CreateTransaction mocks base method.
-func (m *MockTransactionUseCase) CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, error) {
+func (m *MockTransactionUseCase) CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, errorx.Errorx) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTransaction", ctx, transactionContent)
 	ret0, _ := ret[0].(entities.Transaction)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(errorx.Errorx)
 	return ret0, ret1
 }
 

@@ -24,10 +24,10 @@ func TestAccountRepository_CreateAccount(t *testing.T) {
 			}
 
 			testContext, _ := gin.CreateTestContext(httptest.NewRecorder())
-			err := repository.CreateAccount(testContext, &scenario.Data)
+			result, err := repository.CreateAccount(testContext, scenario.Data)
 
 			assert.Equal(t, err, scenario.ExpectError)
-			assert.Equal(t, scenario.Data.ID, scenario.ExpectID)
+			assert.Equal(t, result.ID, scenario.ExpectID)
 		})
 	}
 

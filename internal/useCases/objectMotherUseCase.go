@@ -2,17 +2,20 @@ package useCases
 
 import (
 	"digibank/internal/domain/entities"
+	"digibank/internal/frameworks/errorx"
 	"digibank/internal/interfaceAdapters/dto"
 	"errors"
 	"gorm.io/gorm"
+	"net/http"
 )
 
 type accountUseCaseCreateScenario struct {
 	TestName             string
 	Data                 dto.CreateAccountInput
+	MockRepoResult       entities.Account
 	MockRepoError        error
 	ExpectDocumentNumber string
-	ExpectError          error
+	ExpectError          errorx.Errorx
 }
 
 type accountUseCaseGetScenario struct {
@@ -21,13 +24,23 @@ type accountUseCaseGetScenario struct {
 	MockRepoResult       entities.Account
 	MockRepoError        error
 	ExpectDocumentNumber string
-	ExpectError          error
+	ExpectError          errorx.Errorx
+}
+
+type transactionUseCaseCreateScenario struct {
+	TestName       string
+	Data           dto.CreateTransactionInput
+	MockRepoResult entities.Transaction
+	MockRepoError  error
+	ExpectResult   entities.Transaction
+	ExpectError    errorx.Errorx
 }
 
 func makeScenarioThatCreateAnAccount() accountUseCaseCreateScenario {
 	return accountUseCaseCreateScenario{
 		TestName:             "Create an account",
 		Data:                 dto.CreateAccountInput{DocumentNumber: "12345678900"},
+		MockRepoResult:       entities.Account{DocumentNumber: "12345678900", Model: gorm.Model{ID: 1}},
 		MockRepoError:        nil,
 		ExpectDocumentNumber: "12345678900",
 		ExpectError:          nil,
@@ -38,9 +51,10 @@ func makeScenarioThatReceivesAnErrorWhenCreateAnAccount() accountUseCaseCreateSc
 	return accountUseCaseCreateScenario{
 		TestName:             "Create an account and receives an error from DB",
 		Data:                 dto.CreateAccountInput{DocumentNumber: "12345678900"},
+		MockRepoResult:       entities.Account{},
 		MockRepoError:        errors.New("mock-error"),
-		ExpectDocumentNumber: "12345678900",
-		ExpectError:          errors.New("mock-error"),
+		ExpectDocumentNumber: "",
+		ExpectError:          errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 	}
 }
 
@@ -62,7 +76,7 @@ func makeScenarioThatRetrievesNoneAccount() accountUseCaseGetScenario {
 		MockRepoResult:       entities.Account{},
 		MockRepoError:        errors.New("mock-error"),
 		ExpectDocumentNumber: "",
-		ExpectError:          errors.New("mock-error"),
+		ExpectError:          errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 	}
 }
 
@@ -72,6 +86,26 @@ func makeScenarioThatReceivesAnErrorWhenGetAnAccount() accountUseCaseGetScenario
 		AccountID:            1,
 		MockRepoError:        errors.New("mock-error"),
 		ExpectDocumentNumber: "",
-		ExpectError:          errors.New("mock-error"),
+		ExpectError:          errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
+	}
+}
+func makeScenarioThatCreateATransaction() transactionUseCaseCreateScenario {
+	return transactionUseCaseCreateScenario{
+		TestName:       "Create an account",
+		Data:           dto.CreateTransactionInput{AccountID: 1, OperationTypeID: 4, Amount: 123.45},
+		MockRepoResult: entities.Transaction{Model: gorm.Model{ID: 1}, AccountID: 1, OperationTypeID: 4, Amount: 123.45},
+		MockRepoError:  nil,
+		ExpectResult:   entities.Transaction{AccountID: 1, OperationTypeID: 4, Amount: 123.45},
+		ExpectError:    nil,
+	}
+}
+
+func makeScenarioThatReceivesAnErrorWhenCreateATransaction() transactionUseCaseCreateScenario {
+	return transactionUseCaseCreateScenario{
+		TestName:      "Create an account and receives an error from DB",
+		Data:          dto.CreateTransactionInput{AccountID: 1, OperationTypeID: 4, Amount: 123.45},
+		MockRepoError: errors.New("mock-error"),
+		ExpectResult:  entities.Transaction{},
+		ExpectError:   errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 	}
 }

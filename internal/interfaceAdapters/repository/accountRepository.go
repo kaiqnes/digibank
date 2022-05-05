@@ -8,7 +8,7 @@ import (
 
 //go:generate mockgen -source=./accountRepository.go -destination=./mocks/accountRepository_mock.go
 type AccountRepository interface {
-	CreateAccount(ctx *gin.Context, account *entities.Account) error
+	CreateAccount(ctx *gin.Context, account entities.Account) (entities.Account, error)
 	GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error)
 }
 
@@ -20,9 +20,9 @@ func NewAccountsRepository(session *gorm.DB) AccountRepository {
 	return &accountRepository{session}
 }
 
-func (er *accountRepository) CreateAccount(ctx *gin.Context, account *entities.Account) error {
-	queryResult := er.session.Create(account)
-	return queryResult.Error
+func (er *accountRepository) CreateAccount(ctx *gin.Context, account entities.Account) (entities.Account, error) {
+	queryResult := er.session.Create(&account)
+	return account, queryResult.Error
 }
 
 func (er *accountRepository) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {

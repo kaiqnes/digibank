@@ -46,9 +46,8 @@ func (tc *transactionController) createTransaction(ctx *gin.Context) {
 		return
 	}
 
-	if _, err := tc.useCase.CreateTransaction(ctx, transactionContent); err != nil {
-		// TODO: Create a personal error obj to encapsulate error and a specific error code instead use just error
-		tc.presenter.PresentTransactionError(ctx, err, http.StatusInternalServerError)
+	if _, errx := tc.useCase.CreateTransaction(ctx, transactionContent); errx != nil {
+		tc.presenter.PresentTransactionError(ctx, errx.GetError(), errx.GetStatusCode())
 	} else {
 		tc.presenter.PresentTransaction(ctx, http.StatusCreated)
 	}

@@ -2,17 +2,19 @@ package useCases
 
 import (
 	"digibank/internal/domain/entities"
+	"digibank/internal/frameworks/errorx"
 	"digibank/internal/interfaceAdapters/dto"
 	"digibank/internal/interfaceAdapters/repository"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
 )
 
 //go:generate mockgen -source=./transactionUseCase.go -destination=./mocks/transactionUseCase_mock.go
 type TransactionUseCase interface {
-	CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, error)
+	CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, errorx.Errorx)
 }
 
 type transactionUseCase struct {
@@ -23,7 +25,9 @@ func NewTransactionUseCase(repository repository.TransactionRepository) Transact
 	return &transactionUseCase{repository}
 }
 
-func (a *transactionUseCase) CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, error) {
+func (a *transactionUseCase) CreateTransaction(ctx *gin.Context, transactionContent dto.CreateTransactionInput) (entities.Transaction, errorx.Errorx) {
+	var errx errorx.Errorx
+
 	transaction := entities.Transaction{
 		AccountID:       transactionContent.AccountID,
 		OperationTypeID: transactionContent.OperationTypeID,
@@ -31,12 +35,16 @@ func (a *transactionUseCase) CreateTransaction(ctx *gin.Context, transactionCont
 		EventDate:       time.Now(),
 	}
 
-	err := a.repository.CreateTransaction(ctx, &transaction)
+	createdTransaction, err := a.repository.CreateTransaction(ctx, transaction)
 
-	if transaction.ID == 0 && err == nil {
+	if createdTransaction.ID == 0 && err == nil {
 		errMsg := fmt.Sprintf("error to create transaction.")
-		return transaction, errors.New(errMsg)
+		return createdTransaction, errorx.NewErrorx(http.StatusInternalServerError, errors.New(errMsg))
 	}
 
-	return transaction, err
+	if err != nil {
+		errx = errorx.NewErrorx(http.StatusInternalServerError, err)
+	}
+
+	return createdTransaction, errx
 }

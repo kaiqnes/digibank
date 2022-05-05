@@ -8,7 +8,7 @@ import (
 
 //go:generate mockgen -source=./transactionRepository.go -destination=./mocks/transactionRepository_mock.go
 type TransactionRepository interface {
-	CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error
+	CreateTransaction(ctx *gin.Context, transaction entities.Transaction) (entities.Transaction, error)
 }
 
 type transactionRepository struct {
@@ -19,7 +19,7 @@ func NewTransactionRepository(session *gorm.DB) TransactionRepository {
 	return &transactionRepository{session}
 }
 
-func (er *transactionRepository) CreateTransaction(ctx *gin.Context, transaction *entities.Transaction) error {
-	queryResult := er.session.Create(transaction)
-	return queryResult.Error
+func (er *transactionRepository) CreateTransaction(ctx *gin.Context, transaction entities.Transaction) (entities.Transaction, error) {
+	queryResult := er.session.Create(&transaction)
+	return transaction, queryResult.Error
 }

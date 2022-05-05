@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"digibank/internal/domain/entities"
+	"digibank/internal/frameworks/errorx"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,7 @@ const (
 	v1             = "/api/v1"
 	accountUri     = "/api/v1/accounts"
 	transactionUri = "/api/v1/transactions"
+	healthCheckUri = "/health"
 	emptyBody      = ""
 )
 
@@ -26,7 +28,7 @@ type accountControllerCreateScenario struct {
 	BodyString            string
 	ShouldMockUSeCaseCall bool
 	MockUseCaseResult     entities.Account
-	MockUseCaseError      error
+	MockUseCaseError      errorx.Errorx
 	ExpectStatus          int
 	ExpectResponse        string
 }
@@ -39,7 +41,7 @@ type accountControllerGetScenario struct {
 	BodyString            string
 	ShouldMockUSeCaseCall bool
 	MockUseCaseResult     entities.Account
-	MockUseCaseError      error
+	MockUseCaseError      errorx.Errorx
 	ExpectStatus          int
 	ExpectResponse        string
 }
@@ -51,9 +53,17 @@ type transactionControllerCreateScenario struct {
 	BodyString            string
 	ShouldMockUSeCaseCall bool
 	MockUseCaseResult     entities.Transaction
-	MockUseCaseError      error
+	MockUseCaseError      errorx.Errorx
 	ExpectStatus          int
 	ExpectResponse        string
+}
+
+type healthCheckControllerScenario struct {
+	TestName       string
+	Method         string
+	Uri            string
+	ExpectStatus   int
+	ExpectResponse string
 }
 
 func makeScenarioThatCreateAnAccount() accountControllerCreateScenario {
@@ -90,7 +100,7 @@ func makeScenarioThatReceivesAnErrorFromUseCaseLayerWhenTryToCreateAnAccount() a
 		BodyString:            `{"document_number": "12345678900"}`,
 		ShouldMockUSeCaseCall: true,
 		MockUseCaseResult:     entities.Account{},
-		MockUseCaseError:      errors.New("mock-error"),
+		MockUseCaseError:      errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 		ExpectStatus:          http.StatusInternalServerError,
 		ExpectResponse:        `{"message":"mock-error"}`,
 	}
@@ -145,7 +155,7 @@ func makeScenarioThatReceivesAnErrorFromUseCaseLayerWhenTryToGetAnAccount() acco
 		BodyString:            emptyBody,
 		ShouldMockUSeCaseCall: true,
 		MockUseCaseResult:     entities.Account{},
-		MockUseCaseError:      errors.New("mock-error"),
+		MockUseCaseError:      errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 		ExpectStatus:          http.StatusInternalServerError,
 		ExpectResponse:        `{"message":"mock-error"}`,
 	}
@@ -209,9 +219,19 @@ func makeScenarioThatReceivesAnErrorFromUseCaseLayerWhenTryToCreateATransaction(
 		BodyString:            `{"account_id":1,"operation_type_id":4,"amount":123.45}`,
 		ShouldMockUSeCaseCall: true,
 		MockUseCaseResult:     entities.Transaction{},
-		MockUseCaseError:      errors.New("mock-error"),
+		MockUseCaseError:      errorx.NewErrorx(http.StatusInternalServerError, errors.New("mock-error")),
 		ExpectStatus:          http.StatusInternalServerError,
 		ExpectResponse:        `{"message":"mock-error"}`,
+	}
+}
+
+func makeScenarioThatGetHealthCheck() healthCheckControllerScenario {
+	return healthCheckControllerScenario{
+		TestName:       "Get Health Check result",
+		Method:         http.MethodGet,
+		Uri:            "/health",
+		ExpectStatus:   http.StatusOK,
+		ExpectResponse: `{"response":"https://www.youtube.com/watch?v=xos2MnVxe-c"}`,
 	}
 }
 

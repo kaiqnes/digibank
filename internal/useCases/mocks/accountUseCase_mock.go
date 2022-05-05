@@ -6,6 +6,7 @@ package mock_useCases
 
 import (
 	entities "digibank/internal/domain/entities"
+	errorx "digibank/internal/frameworks/errorx"
 	dto "digibank/internal/interfaceAdapters/dto"
 	reflect "reflect"
 
@@ -37,11 +38,11 @@ func (m *MockAccountUseCase) EXPECT() *MockAccountUseCaseMockRecorder {
 }
 
 // CreateAccount mocks base method.
-func (m *MockAccountUseCase) CreateAccount(ctx *gin.Context, accountContent dto.CreateAccountInput) (entities.Account, error) {
+func (m *MockAccountUseCase) CreateAccount(ctx *gin.Context, accountContent dto.CreateAccountInput) (entities.Account, errorx.Errorx) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", ctx, accountContent)
 	ret0, _ := ret[0].(entities.Account)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(errorx.Errorx)
 	return ret0, ret1
 }
 
@@ -52,11 +53,11 @@ func (mr *MockAccountUseCaseMockRecorder) CreateAccount(ctx, accountContent inte
 }
 
 // GetAccount mocks base method.
-func (m *MockAccountUseCase) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, error) {
+func (m *MockAccountUseCase) GetAccount(ctx *gin.Context, accountID uint) (entities.Account, errorx.Errorx) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccount", ctx, accountID)
 	ret0, _ := ret[0].(entities.Account)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(errorx.Errorx)
 	return ret0, ret1
 }
 
