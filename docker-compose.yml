@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  app:
+    build: "./"
+    container_name: ${APP_NAME}-app
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      PORT: 8080
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      - db
+    networks:
+      challenge-digibank:
+        aliases:
+          - digibank-app
+
+  db:
+    image: ${DB_IMAGE}
+    container_name: ${APP_NAME}-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+    networks:
+      challenge-digibank:
+        aliases:
+          - digibank-db
+
+networks:
+  challenge-digibank:
+    name: challenge-digibank
