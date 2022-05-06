@@ -33,6 +33,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Account"
+                ],
                 "summary": "This endpoint creates a new account",
                 "parameters": [
                     {
@@ -187,7 +190,7 @@ const docTemplate = `{
         "dto.AccountPresenterResponse": {
             "type": "object",
             "properties": {
-                "accountID": {
+                "account_id": {
                     "type": "integer"
                 },
                 "document_number": {

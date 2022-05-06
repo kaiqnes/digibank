@@ -5,3 +5,6 @@ run: ## Start environment
 
 stop: ## Stop environment
 	docker-compose down
+
+run-tests: ## Run unit-tests
+	go test ./...

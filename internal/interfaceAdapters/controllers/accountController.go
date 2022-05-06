@@ -35,6 +35,7 @@ func (a *accountController) SetupEndpoints() {
 // createAccount 	 godoc
 // @Summary      This endpoint creates a new account
 // @Description  This endpoint creates a new account and returns the "document_number" (string) representing the accountID
+// @Tags         Account
 // @Accept       json
 // @Produce      json
 // @Param request_body body string true "Document number to be inserted into account to be created" SchemaExample({\r\n  "document_number": "12345678900"\r\n})

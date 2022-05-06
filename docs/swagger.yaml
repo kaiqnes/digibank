@@ -2,7 +2,7 @@ basePath: /
 definitions:
   dto.AccountPresenterResponse:
     properties:
-      accountID:
+      account_id:
         type: integer
       document_number:
         type: string
@@ -55,6 +55,8 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrorOutputDto'
       summary: This endpoint creates a new account
+      tags:
+      - Account
   /api/v1/accounts/{accountID}:
     get:
       consumes:
