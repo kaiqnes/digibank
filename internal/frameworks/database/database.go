@@ -30,7 +30,7 @@ func createDatabase() {
 	defer db.Close()
 
 	name := utils.GetEnvOrDefault("DB_NAME", "")
-	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s", name))
+	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", name))
 	if err != nil {
 		log.Fatalf("failed to create %s database - err %v", name, err)
 	}
