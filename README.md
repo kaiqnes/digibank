@@ -19,13 +19,14 @@ Para iniciar a aplicação, execute algum dos comandos abaixo:
 ```
 make run
 ```
-O comando 'make run' iniciará os containers necessários para que a aplicação fique no ar.
+> O comando 'make run' iniciará os containers necessários para que a aplicação fique no ar.
+
 
 
 ```
 make stop
 ```
-O comando 'make stop' encerrará a atividade dos containers.
+> O comando 'make stop' encerrará a atividade dos containers.
 
 
 ## Testes e documentação
